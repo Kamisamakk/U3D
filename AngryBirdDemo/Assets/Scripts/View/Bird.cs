@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
     private bool isClick = false;
-    private bool isFly = true;//是否可以飞
+    private bool isMove = true;//是否可以移动
+    private bool isFly=false;//是否飞行
+    
     public float maxDis = 1.5f;
     public float smooth = 3f;
     [HideInInspector]
     public SpringJoint2D springJoint;
-    private Rigidbody2D rg;
+    protected Rigidbody2D rg;
 
     public LineRenderer right;
     public LineRenderer left;
@@ -31,7 +34,7 @@ public class Bird : MonoBehaviour
     //鼠标按下
     private void OnMouseDown()
     {
-        if(isFly)
+        if(isMove)
         {
             AudioPlay(select);
             isClick = true;
@@ -43,12 +46,12 @@ public class Bird : MonoBehaviour
     //鼠标抬起
     private void OnMouseUp()
     {
-        if (isFly) 
+        if (isMove) 
         {
             isClick = false;
             rg.isKinematic = false;
             Invoke("Fly", 0.1f);
-            isFly = false;
+            isMove = false;
         }
             
     }
@@ -74,10 +77,19 @@ public class Bird : MonoBehaviour
         //相机跟随
         float posX = transform.position.x;//记录小鸟初始位置
         Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(Mathf.Clamp(posX, 0, 15f), Camera.main.transform.position.y,Camera.main.transform.position.z), smooth * Time.deltaTime);//设置相机位置
+
+        if (isFly)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Skill();
+            }
+        }
     }
 
     private void Fly()
     {
+        isFly = true;
         AudioPlay(fly);
         //禁用linerenderer
         right.enabled = false;
@@ -115,4 +127,14 @@ public class Bird : MonoBehaviour
         AudioSource.PlayClipAtPoint(audioClip, transform.position);
     }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        isFly = false;
+    }
+
+    //技能
+    public virtual void Skill()
+    {
+        isFly = false;
+    }
 }
