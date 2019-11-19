@@ -22,13 +22,16 @@ public class Bird : MonoBehaviour
 
     public AudioClip select;
     public AudioClip fly;
-   
+
+    public Sprite hurtSprite;
+    protected SpriteRenderer spriteRenderer;
 
     public GameObject boom;//撞击特效
     private void Awake()
     {
         springJoint = transform.GetComponent<SpringJoint2D>();
         rg = transform.GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         springJoint.enabled = false;
     }
     //鼠标按下
@@ -40,8 +43,6 @@ public class Bird : MonoBehaviour
             isClick = true;
             rg.isKinematic = true;
         }
-        
-        
     }
     //鼠标抬起
     private void OnMouseUp()
@@ -112,7 +113,7 @@ public class Bird : MonoBehaviour
         left.SetPosition(1, transform.position);
     }
 
-    private void NextBird()
+    protected virtual void NextBird()
     {
         GameManager.gameManager.birdList.Remove(this);//列表移除
         Destroy(gameObject);
@@ -130,6 +131,8 @@ public class Bird : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         isFly = false;
+        if(!other.gameObject.tag.Equals("Env")&&!other.gameObject.tag.Equals("Bird"))
+            spriteRenderer.sprite = hurtSprite;
     }
 
     //技能

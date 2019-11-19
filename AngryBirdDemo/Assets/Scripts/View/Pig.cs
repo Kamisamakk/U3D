@@ -44,7 +44,7 @@ public class Pig : MonoBehaviour
        
     }
 
-    private void Dead()
+    public void Dead()
     {
         if(isPig)
         {

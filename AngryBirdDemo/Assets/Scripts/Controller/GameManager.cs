@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
             if(birdList.Count>0)
             {
                 //下一只小鸟飞
-                Init();
+                Invoke("Init",1f);
             }
             //用完小鸟输
             else
@@ -91,10 +91,7 @@ public class GameManager : MonoBehaviour
             stars[i].SetActive(true);
         }
     }
-    public void Resume()
-    {
-
-    }
+    
     public void Repaly()
     {
         SceneManager.LoadScene(2);
@@ -105,8 +102,4 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void Pause()
-    {
-
-    }
 }
