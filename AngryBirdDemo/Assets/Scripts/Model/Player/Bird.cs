@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Bird : MonoBehaviour
 {
     private bool isClick = false;
-    private bool isMove = true;//是否可以移动
+    public bool isMove = false;//是否可以移动
     private bool isFly=false;//是否飞行
+    public bool isRelease = false;//鼠标释放
     
     public float maxDis = 1.5f;
     public float smooth = 3f;
@@ -59,6 +61,8 @@ public class Bird : MonoBehaviour
 
     private void Update()
     {
+        //如果点击了UI界面
+        if(EventSystem.current.IsPointerOverGameObject())return;
         //如果鼠标一直按下，设置小鸟位置
         if(isClick)
         {
@@ -90,6 +94,7 @@ public class Bird : MonoBehaviour
 
     private void Fly()
     {
+        isRelease = true;
         isFly = true;
         AudioPlay(fly);
         //禁用linerenderer

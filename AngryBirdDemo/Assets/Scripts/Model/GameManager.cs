@@ -9,10 +9,12 @@ public class GameManager : MonoBehaviour
     private Vector3 originPos;//初始化的位置
     public static GameManager gameManager;
 
-   
     public GameObject win;
     public GameObject lose;
     public GameObject[] stars;
+
+    public int starsNum=0;//星星数量
+    private int totalNum = 4;//关卡数量
     private void Awake()
     {
         if(gameManager==null)
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
             {
                 birdList[i].transform.position = originPos;
                 birdList[i].enabled = true;
+                birdList[i].GetComponent<Bird>().isMove = true;
                 birdList[i].springJoint.enabled = true;
             }
             else
@@ -84,22 +87,46 @@ public class GameManager : MonoBehaviour
     IEnumerator Show()
     {
         //遍历当前小鸟个数
-        for (int i = 0; i <=birdList.Count; i++)
+        for (starsNum = 0; starsNum <=birdList.Count; starsNum++)
         {
+            if(starsNum>=stars.Length)
+            {
+                break;
+            }
             yield return new WaitForSeconds(0.2f);
-            Debug.Log(i);
-            stars[i].SetActive(true);
+            Debug.Log(starsNum);
+            stars[starsNum].SetActive(true);
         }
     }
     
     public void Repaly()
     {
+        SaveData();
         SceneManager.LoadScene(2);
     }
 
     public void Home()
     {
+        SaveData();
         SceneManager.LoadScene(1);
+    }
+
+    public void SaveData()
+    {
+        //只保存最高星星数量
+        if(starsNum>PlayerPrefs.GetInt(PlayerPrefs.GetString("currentLevel")))
+        {
+            //保存当前关卡的星星数量
+            PlayerPrefs.SetInt(PlayerPrefs.GetString("currentLevel"),starsNum);
+        }
+
+        int sum = 0;//关卡累计星星数量
+        for (int i = 0; i < totalNum; i++)
+        {
+            sum += PlayerPrefs.GetInt("level"+i.ToString());
+        }
+        //print(sum);
+        PlayerPrefs.SetInt("totalNum",sum);
     }
 
 }

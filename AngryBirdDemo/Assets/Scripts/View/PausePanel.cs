@@ -20,13 +20,27 @@ public class PausePanel : MonoBehaviour
     {
         Time.timeScale = 1;
         animator.SetBool("isPause", false);
-
+        if (GameManager.gameManager.birdList.Count > 0)
+        {
+            if (GameManager.gameManager.birdList[0].isRelease == false)
+            {
+                GameManager.gameManager.birdList[0].isMove = true;
+            }
+        }
     }
 
     public void Pause()
     {
         animator.SetBool("isPause", true);
         button.SetActive(false);
+
+        if (GameManager.gameManager.birdList.Count > 0)
+        {
+            if (GameManager.gameManager.birdList[0].isRelease == false)//如果没有飞出
+            {
+                GameManager.gameManager.birdList[0].isMove = false;
+            }
+        }
     }
 
     public void Home()
